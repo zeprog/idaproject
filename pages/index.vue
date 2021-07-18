@@ -40,7 +40,6 @@ export default {
     this.$axios.get('https://frontend-test.idaproject.com/api/product')
       .then(cart => {
         this.carts = cart.data
-        console.log(this.carts);
       })
   },
   methods: {
@@ -50,8 +49,7 @@ export default {
       } else if(e === 'popular') {
         this.carts = this.carts.sort((a, b) => b.rating - a.rating)
       }
-    },
-    
+    }
   }
 }
 </script>

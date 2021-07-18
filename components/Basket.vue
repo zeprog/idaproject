@@ -5,26 +5,32 @@
         <h2 class="basket__header-title">Корзина</h2>
         <img src="@/assets/img/icons/close.svg" alt="" @click="closeBasket">
       </div>
-      <div class="basket__body">
-        <p class="basket__body-description title">
-          Товары в корзине
-        </p>
-        <BasketItem />
+      <div v-if="$store.state.basketItem.length">
+        <div class="basket__body">
+          <p class="basket__body-description title" >
+            Товары в корзине
+          </p>
+          <BasketItem v-for="item of $store.state.basketItem" :key="item.id" :item="item"/>
+        </div>
+        <div class="basket__form">
+          <p class="basket__form-title title">Оформить заказ</p>
+          <form >
+            <FormInput 
+              v-for="(placeholder, index) of placeholders" 
+              :key="index" 
+              :type="placeholder.type" 
+              :mask="['+7 (###) ###-##-##']"
+              :masked="masked = true"
+              :placeholder="placeholder.title"
+              :required="placeholder.required"
+            />
+            <FormButton :text="text[0]" />
+          </form>
+        </div>
       </div>
-      <div class="basket__form">
-        <p class="basket__form-title title">Оформить заказ</p>
-        <form @submit="submitHandler">
-          <FormInput 
-            v-for="(placeholder, index) of placeholders" 
-            :key="index" 
-            :type="placeholder.type" 
-            :mask="['+7 (###) ###-##-##']"
-            :masked="masked = true"
-            :placeholder="placeholder.title"
-            :required="placeholder.required"
-          />
-          <FormButton :text="text" />
-        </form>
+      <div v-else>
+        <p class="basket__empty-text">Пока что вы ничего не добавили в корзину.</p>
+        <FormButton :text="text[1]" type="button" @click.native.prevent="closeBasket" />
       </div>
     </div>
   </div>
@@ -47,12 +53,15 @@ export default {
       {title: 'Телефон', type: 'mask', required: true}, 
       {title: 'Адрес', type: 'text', required: true}
     ],
-    text: 'Отправить'
+    text: ['Отправить', 'Перейти к выбору']
   }), 
   methods: {
     closeBasket () {
       this.$emit('closeBasket')
-    }
+    },
+    // countDecrement() {
+    //   console.log(this.$store.state.basketCount, this.$store.state.basketItem)
+    // }
   }
 }
 </script>
@@ -110,6 +119,12 @@ export default {
     &-title {
       margin-bottom: 16px;
     }
+  }
+
+  &__empty-text {
+    color: #000;
+    font-size: 22px;
+    margin: 33px 0 25px;
   }
 }
 
