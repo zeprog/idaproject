@@ -29,8 +29,7 @@ export default {
   props: ['item'],
   methods: {
     deleteBasketItem() {
-      this.$store.commit('deleteBasketItem', this.item)
-      // console.log(this.$store.state.basketCount);
+      this.$store.commit('deleteBasketItem', this.item.id)
     }
   }
 }

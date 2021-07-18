@@ -20,9 +20,11 @@ export default {
   methods: {
     closeBasket() {
       this.showBasket = false
+      document.body.classList.remove('lock')
     },
     openBasket() {
       this.showBasket = true
+      document.body.classList.add('lock')
     }
   }
 }
@@ -50,5 +52,9 @@ li {
 
 .container {
   margin: 0 5%;
+}
+
+.lock {
+  overflow: hidden;
 }
 </style>

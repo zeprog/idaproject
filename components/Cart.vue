@@ -29,7 +29,6 @@ export default {
   methods: {
     countIncrement() {
       this.$store.commit('basketItem', this.cart)
-      // console.log(this.$store.state.basketItem, this.$store.state.basketCount)
     }
   }
 }

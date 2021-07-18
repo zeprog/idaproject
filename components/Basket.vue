@@ -14,19 +14,39 @@
         </div>
         <div class="basket__form">
           <p class="basket__form-title title">Оформить заказ</p>
-          <form >
+          <form @submit.prevent="submitForm">
             <FormInput 
-              v-for="(placeholder, index) of placeholders" 
-              :key="index" 
-              :type="placeholder.type" 
-              :mask="['+7 (###) ###-##-##']"
-              :masked="masked = true"
-              :placeholder="placeholder.title"
-              :required="placeholder.required"
+              :placeholder="'Ваше имя'"
+              :required="required = true"
+              v-model="userName"
+              value=""
             />
-            <FormButton :text="text[0]" />
+            <FormInput 
+              :placeholder="'Телефон'"
+              v-model="phone"
+              type="tel"
+              :required="required = true"
+              value=""
+            />
+            <FormInput 
+              :placeholder="'Адрес'"
+              v-model="adress"
+              :required="required = true"
+              value=""
+            />
+            <FormButton :text="text[0]" :class="{disable: userName == '' || phone == '' || adress == ''}" />
+            <div v-if="userName == '' || phone == '' || adress == ''">
+              <p class="form__disabled">Все поля обязательные.<br>После удачной отправки формы содержимое корзины очищается</p>
+            </div>
           </form>
         </div>
+      </div>
+      <div class="basket__success" v-else-if="success">
+        <div class="basket__success-img">
+          <img src="@/assets/img/ok.png" alt="">
+        </div>
+        <h3 class="basket__success-title">Заявка успешно отправлена</h3>
+        <p class="basket__success-text">Вскоре наш менеджер свяжется с Вами</p>
       </div>
       <div v-else>
         <p class="basket__empty-text">Пока что вы ничего не добавили в корзину.</p>
@@ -47,21 +67,32 @@ export default {
     FormButton
   },
   props: ['showBasket'],
-  data: () => ({
-    placeholders: [
-      {title: 'Ваше имя', type: 'text', required: true}, 
-      {title: 'Телефон', type: 'mask', required: true}, 
-      {title: 'Адрес', type: 'text', required: true}
-    ],
-    text: ['Отправить', 'Перейти к выбору']
-  }), 
+  data() {
+    return {
+      placeholders: [
+        {title: 'Ваше имя', type: 'text', required: true, model: 'name'}, 
+        {title: 'Телефон', type: 'tel', required: true, model: 'phone'}, 
+        {title: 'Адрес', type: 'text', required: true, model: 'adress'}
+      ],
+      text: ['Отправить', 'Перейти к выбору'],
+      userName: '',
+      phone: '',
+      adress: '',
+      success: false,
+      disabled: false
+    }
+  }, 
   methods: {
     closeBasket () {
       this.$emit('closeBasket')
     },
-    // countDecrement() {
-    //   console.log(this.$store.state.basketCount, this.$store.state.basketItem)
-    // }
+    submitForm() {
+      this.userName = ''
+      this.phone = '' 
+      this.adress = ''
+      this.$store.commit('basketClean')
+      this.success = true
+    }
   }
 }
 </script>
@@ -126,11 +157,55 @@ export default {
     font-size: 22px;
     margin: 33px 0 25px;
   }
+
+  &__success {
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &-title {
+      font-size: 24px;
+      color: #000;
+      margin: 24px 0 9px;
+    }
+
+    &-text {
+      font-size: 16px;
+      color: #59606D;
+    }
+  }
+}
+
+.form__disabled {
+  color: #000;
+  font-size: 16px;
+  margin-top: 27px;
+  position: relative;
+  padding-left: 25px;
+
+
+  &::before {
+    content: '!!';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-weight: 700;
+    font-size: 32px;
+    color: #EB5757;
+  }
 }
 
 .title {
   font-size: 18px;
   line-height: 23px;
   color: #59606D;
+}
+
+.disable {
+  background: #59606D;
 }
 </style>

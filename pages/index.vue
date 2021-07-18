@@ -41,6 +41,7 @@ export default {
       .then(cart => {
         this.carts = cart.data
       })
+    this.$store.commit('cacheProduct')
   },
   methods: {
     sortItem(e) {
