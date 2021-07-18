@@ -59,6 +59,7 @@ export default {
     svg {
       width: 16px;
       height: 16px;
+      cursor: pointer;
 
       path {
         fill: #959DAD;
